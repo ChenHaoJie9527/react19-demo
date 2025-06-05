@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'react'
-import { useTransition } from 'react'
+import { useTransition, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,6 +38,7 @@ export default function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState('')
   const form = useForm<z.infer<typeof userAuthSchema>>({
     resolver: zodResolver(userAuthSchema),
     defaultValues: {
@@ -47,6 +48,7 @@ export default function UserAuthForm({
   })
 
   const onSubmit = (data: z.infer<typeof userAuthSchema>) => {
+    setError('')
     startTransition(async () => {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -59,11 +61,12 @@ export default function UserAuthForm({
         }),
       })
       const response = await res.json()
-      return response
+      if (!response.data && response.message) {
+        setError(response.message)
+      }
     })
   }
 
-  console.log('isPending===>', isPending)
 
   return (
     <Form {...form}>
@@ -98,9 +101,13 @@ export default function UserAuthForm({
             </FormItem>
           )}
         />
+        
         <Button type='submit' className='w-full' loading={isPending}>
           Login
         </Button>
+        {error && (
+          <div className="text-red-500 text-sm text-center">{error}</div>
+        )}
       </form>
     </Form>
   )

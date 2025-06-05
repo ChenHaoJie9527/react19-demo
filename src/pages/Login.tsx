@@ -7,7 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import UserAuthForm from '@/components/userAuthForm'
+// import UserAuthForm from '@/components/userAuthForm'
+import UserAuthForm2 from '@/components/userAuthForm2'
 
 const Login = () => {
   return (
@@ -21,7 +22,8 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UserAuthForm />
+          {/* <UserAuthForm /> */}
+          <UserAuthForm2 />
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>

@@ -14,12 +14,12 @@ export const AppSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string(),
-  }),
+  }).optional(),
 })
 
 type AppState = z.infer<typeof AppSchema>
 
-export const AppContext = createContext<AppState | null>(null)
+export const AppContext = createContext<AppState>({})
 
 function App() {
   return (

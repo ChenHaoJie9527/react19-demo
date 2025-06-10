@@ -1,4 +1,5 @@
-import { useActionState, useState } from 'react'
+import { AppContext } from '@/App'
+import { use, useActionState, useEffect, useState } from 'react'
 import { email, z } from 'zod/v4'
 
 // 1. 定义表单校验 schema
@@ -83,6 +84,7 @@ async function loginRequest(
 }
 
 export default function UserAuthForm2() {
+  const { user } = use(AppContext)
   const [state, formAction, isPending] = useActionState(
     async (_state: ActionState, formData: FormData): Promise<ActionState> => {
       const validation = validateLoginForm(formData)
@@ -111,6 +113,12 @@ export default function UserAuthForm2() {
     if (validation.success) return undefined
     return validation.error.flatten().fieldErrors[field]?.[0]
   }
+
+  useEffect(() => {
+    if (user) {
+      setFormValues({ email: user.email, password: user.password })
+    }
+  }, [user])
 
   return (
     <form action={formAction} className='flex flex-col gap-2'>
